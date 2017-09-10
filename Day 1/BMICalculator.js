@@ -1,0 +1,71 @@
+
+
+	'use strict';
+
+  class BMICalculator {
+	constructor(height, weight){
+		this.height = height;
+		this.weight = weight;
+	}
+	calculateBMI() {
+		return this.weight / (this.height * this.height) * 703;
+	}
+	
+	getStatus() {
+		var status = "";
+		var bmi = this.calculateBMI();
+		if (bmi < 18.5) {
+			status = "Underweight";
+		} else if (bmi >= 18.5 && bmi <= 24.9) {
+			status = "Normal or Healthy Weight";
+		} else if (bmi >= 25.0 && bmi <= 29.9) {
+			status = "Over Weight";
+		}
+		else {
+			status = "Obese";
+		}
+
+		return status;
+
+     }
+    }
+
+	// Write code to make sure all inputs are valid. If not valid, give appropriate response to indicate it is invalid and that it needs to be corrected.
+
+	function isValid(input) {
+		if(input == ""){
+			errorMsg = "Can not be empty";
+			return false;
+		}
+		if(input < 0) {
+			errorMsg = "Can not be less than zero";
+			return false;
+		}
+		return true;
+    }
+
+	// Use the BMICalculator class for calculations. Show BMI value and the status.
+
+	var errorMsg = "";
+	document.getElementById("calculate").onclick = function() {
+		var height = document.getElementsByName("height")[0].value;
+		var weight = document.getElementsByName("weight")[0].value;
+
+		if(!isValid(height)) {
+			document.getElementById("errorHeight").innerHTML = errorMsg;
+			return false;
+		}
+		if(!isValid(weight)) {
+			document.getElementById("errorWeight").innerHTML = errorMsg;
+			return false;
+		}
+
+		var metric = new BMICalculator();
+		metric.height = height;
+		metric.weight = weight;
+		document.getElementById("errorHeight").innerHTML = "";
+		document.getElementById("errorWeight").innerHTML = "";
+
+		document.getElementById("output").innerHTML = metric.calculateBMI() + " " + metric.getStatus();
+
+    }
