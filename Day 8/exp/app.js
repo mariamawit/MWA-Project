@@ -4,11 +4,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var lessMiddleware = require('less-middleware');
-var mongo = require('mongoskin');
+var cookieSession = require('cookie-session');
+var validator = require('express-validator');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
+var add = require('./routes/add');
+var manage = require('./routes/manage');
+var search = require('./routes/search');
 
 var app = express();
 
@@ -22,17 +24,21 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
-
-var db = mongo.db("mongodb://localhost:27017//myDb", {native_parser:true});
-req.db = db;
-next();
-db.close();
-
+app.use(validator());
+app.use(cookieSession({
+                    name: 'session',
+                    secret: "mysecret",
+                    httpOnly: true,
+                    maxAge: 30 * 60 * 1000,
+                    secure: false,
+                    overwrite: false,
+              }));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/add', add);
+app.use('/manage', manage);
+app.use('/search', search);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -50,6 +56,7 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-}).listen(5000);
-
+});
+app.listen(5000, () => console.log("Listening to port 5000"));
 module.exports = app;
+
