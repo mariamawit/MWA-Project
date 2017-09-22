@@ -1,0 +1,13 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Welcome to {{title}}!
+  </h1>
+  
+  <label>Set counter : <input [(ngModel)]="counter"/></label>
+  <p>ComponentCounterValue : {{ComponentCounterValue}}</p>
+<br>
+
+
+<app-counter [paraCounter]="counter" [paraCounter2]="ComponentCounterValue" (counterChange)="showOutputData($event)"></app-counter>
+
